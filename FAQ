@@ -1,0 +1,382 @@
+
+Bastion host scenarios
+
+Changing instance type in an autoscaling group. Where does that get done?..Launch Configuration
+
+One question around storage that threw me for a slight loop, about storage choice affecting compute.
+
+Public/Private subnet scenarios. By default can they connect to each other?
+
+Another question that threw me for a loop was around importing scripts on an EC2, EC2configservice.
+
+A whole bunch of EC2, S3/EBS scenarios. The Put/Deletes is a guaranteed question. Watch out for the tricky wording as they always but an "any,all,sometimes" word in front to throw off the question. I knew this subject inside and out, but on the exam the wording threw me off.
+
+A whole bunch of VPC scenarios and subnetting. Have a good understanding of routing, /25 subnets and that a /32 subnet doesn't exist. At least 5-6 questions around this.
+
+
+ It leaned extremely heavily on VPCs, and networking concepts in general, including elastic IPs, NAT, IGW, public/private subnet concepts, security roles, network ACLs, etc. Also learn how bastion hosts work.
+
+5. Thoroughly understanding building highly available web tier systems is a must.
+
+6. Dynamo DB came up a surprisingly high number of times. It drilled me a few times asking for durable, high performance storage of key pairs, session info, small text items, etc.
+
+7. EBS features, such as encryption, snapshotting, copying, etc was covered in probably 5 questions. Definitely understand the minutia of how to work with EBS volumes.
+
+8. API gateway came up 2 times. Knowing what needs to be done to access it from a user, from a network, etc. is necessary.
+
+9. One question on Elastic Beanstalk (when to use it)
+
+10. One question on Chef, one on Lambda, but super easy questions.
+
+11. One STS question (I probably got it wrong). Asked something about why when you deploy an Ubuntu instance it does show up in the cluster.
+
+12. Know what services cross regions, availability zones, and which ones don't
+
+Hope this helps and good luck on your exam!
+
+Amazon Simple Storage Service (Amazon S3) - most asked questions were basic just need the basic understanding with few other related service like CroudFront, Storage Gateway, EVENTUAL CONSISTENCY was waiting there to increase your score in exam, so please read it and please read scenarios or create one yourself for using S3. Do know it’s durable and scalable. Please understand when to use IAM, Bucket Policies, and Access Control Lists (ACLs). Storage Class with Lifecycle policies, please do remember in some scenarios you will upload all files to S3 IA - Infrequent Access as per scenario. I was given a scenario in which data was on site and now the company want to use AWS for the storage and backup purposes, and every single report was of 1GB and they were receiving multiple reports in a month but once report is collected, only 10% was required to view by the company per 30 days but data needs to be available quickly and after that it’s never used but needed to be backed up for company regulatory conditions. So in this use S3 IA for storing infrequent data and apply lifecycle policy to transfer to Glacier for archival. For optimal PUT performance use some randomness in the key name prefixes, the key names, and the I/O load, will be distributed across multiple index partitions. For confidence's sake, just be aware that the S3 200 code comes with an MD5 checksum in the success message.
+
+Amazon Elastic Compute Cloud (Amazon EC2), Amazon EBS Storage and difference between EBS and Instance store(ephemeral storage), this can be asked other way around EBS-Backed-AMI and S3-Backed-AMI, Amazon Autoscaling, please note that there are 4 Autoscaling plans namely, Main Current Instance Levels, Manual Scaling, Scheduled Scaling, and Dynamic Scaling. Remember if you want AS to launch different AMI’s than the one set up please remember you can’t modify Launch Configuration, which is the template for AS you must create new LC and then assign it to your AS, all the new instances will be launched with new AMI and all the previous one will still be running. Remember when to use On-Demand, Reserved and Spot instances. Placement Groups I got 2 questions. Elastic IP when you are charged? Well you’re charged when you have not associated with the instance or your instance is stopped or you have assigned more than 1 EIP to one instance, then you’re charged minimal fee for it. Why? Because IPv4 addresses are getting depleted so AWS wants you to use it efficiently. Auto Scaling Lifecycle Hook, didn’t know before today’s exam so please have a look by googling it. EBS encryption please know about encryption more than little bit, all instance type doesn't support EBS encryption. Know that to run a script upon launching your instance even with Auto Scaling, you would enter the script in the instance's User Data field. How can we take the snapshot of the RAID volumes with efficiency.
+
+Virtual Private Cloud (Amazon VPC) I will say just one thing know VPC in and out there is possibility of losing points if you miss any single VPC offerings and how they work. Please know if an instance is configured properly on custom VPC with Internet Gateway routing the traffic to internet in public subnet and Security Group and Network ACLs defining right ports for connection and still not able to connect to your instance consider assigning Public IP/Elastic IP. Know what does stateless and stateful are, I got a scenario based question not straightforward question that which is what, so know well how SG works, if you allow any INBOUND rule, OUTBOUND is defined automatically while not the case in NACLs you have to define both separately. Please know how Virtual Private Network (VPN) connection works and Direct Gateway for private connections, don’t mix with PRIVATE SUBNET, you can use public subnet with VPN. NAT is no miss guys. Remember AWS recommends using NAT gateways because it’s fully managed so you don’t have to launch any instance or manage network throughput, all of this managed by AWS. While if you using a NAT instance and you have configured it all correct but when connecting your private subnet instance to internet for outbound traffic it’s connecting, but WHY? You forgot to Disable Source/Destination checks flag, exactly this was question on my exam. Wait do you know what we can use other than NAT instance and NAT gateway to give secure outbound internet connect to our private subnet, that’s bastion host or call it jump server, and it resides in public subnet, got 2 questions on this single point with different scenarios.
+
+Identity and Access Management (IAM) most of you may not paying attention to this topic too much but in exam it was one of the main topic. IAM users, groups, roles. Everyone knows this but there is much more which IAM can do and you need to know so that you don’t scratch your head in exam. Please note you can enable cross account access. I don’t remember exactly what scenarios were but it was not simple that you think of, so please go through this topic very well. I do remember one scenario where you hired third-party to access your bucket and transfer data to Glacier so what will you use? IAM or Bucket Policies, there were 4 options but two for IAM with different scenarios and two for Bucket Policies. Please do look at IAM federation with other services.
+
+Databases, Relational Database(Amazon RDS), NoSQL Database (DynamoDB) and Data Warehousing(Redshift) know them well especially firm understanding what you can do and what you can’t do with each of these and AZs are for failover not for performance and read replicas are to increase the read performance if the website needs much more reads than writes. Expect at least 1-2 questions from each of these DB types. How to increase storage sizes and how they affect the performance.
+
+Application Service such as Simple Queue Service (SQS), Simple Notification Service (SNS) what protocols it support? and Simple Workflow (SWF) know when it is used i.e. for works which need coordinating task across the application service.
+
+Route53 how weighted latency work? To spread even traffic to instances/ELB. Keep in mind AWS use ALIAS record for zone apex (naked domain) not CNAME.
+
+Amazon Elasticache there were 2 question on the exam, sorry don’t remember the question or scenario.
+
+Amazon Storage Gateway 1 Question
+
+Amazon CloudFront - 2 Questions
+
+AWS Directory Service - 2 Questions
+
+AWS CloudTrail - 1 Question
+
+Amazon Kinesis - 2 Questions
+
+AWS Import/Export - 1 Question
+
+Elastic Beanstalk - 1 Question
+
+AWS Trusted Advisor - 1 Question, it was about identifying 4 inspections available on Dashboard i.e. Cost Optimization, Performance, Security, Fault Tolerance.
+
+Amazon Elastic Container Services - 2 Questions
+
+Amazon API Gateway - 2 Questions
+
+Amazon Security Token Service(STS) - 1 Question
+
+Amazon AMI - 1 Question
+
+AWS Whitepapers - 8-10 Questions were solely from the following 3 Whitepapers: Security on AWS, AWS Risk and Compliance, and Architecture Best Practices.
+
+There were 7 questions on lambda functions. Understand how they can be provisioned, secured and optimised. Rayn please add more content on lambda. I lost about 4 marks on this.
+
+5 questions on ECS. You must understand how the are provisioned, secured, and integrated with other services. Deep dive into EC2 Container Service. Lambda and ECS service made up about 15%.
+
+2 questions on S3 backed instances. I assumed they were instance stores. Look into this for easy marks.
+
+VPN vs Direct Connect. How do you introduce redundancy, resilience and recovery?. Understand their performance characteristics.
+
+Throughput optimised HDD vs General purpose IOPS. What are their preferred use cases? Understand their cost vs bursting characteristics.
+
+Security group VS Network ACL. Understand their combined effect. The key to distinguishing them is when you see the word "denied" in one of the answers (ACL).
+
+VPC Peering
+
+I had a question that pertained to VPC peering, but more specifically the ability to access an instance from one peer to another. The funny thing about this question that threw me off is that everything is set correctly between VPC peers and there are no overlapping CIDRs, but one instance on one VPC cannot access another instance. Let's just say that if I actually took the time to do the lab exercises, I probably would have known the answer off the top of my head, but I didn't and therefore am left wondering what would be the answer to troubleshoot the problem.
+
+A Lot of Encryption
+
+Yes, EBS encryption, S3 encryption, encryption about encryption, etc. I felt like they were preparing me to encrypt the living daylights out of everything. I had to answer how to encrypt an EBS that has already been created, how to encrypt an EBS and transfer it between availability zones, two part question on what can be encrypted, how to encrypt files in S3, what are the types of S3 encryption (choose 3 of 6 answers that are poorly worded), etc. Considering I scored an 80% on Security, I think I got those right, but I'm tired of encrypting.
+
+I Think I can Scale
+
+All of my scalability questions had multiple answers and some of them were barely understandable. They weren't as clear cut as the practice exams on the course or the practice quizzes on the mobile app. It was like a game of, "How can I confuse the hell out of you." I've been scaling systems for years so my first choices were pretty obvious. It's only the second answer that makes you go, "Huh!" You end up using process of elimination tricks to get to that second answer, but from my score on the scalability part, it probably still ain't right. As a side note, I've always had problems with reading comprehension so confusing questions and answers are my kryptonite. The fact that I passed the scalability section at all is a milestone because of the wording.
+
+Softball Questions, HAHAHA
+
+Don't expect to get the questions like, "What's SES?" They didn't exist on my exam. If you get it, slam dunk it like King James! <- (Basketball reference) If not, you're in good company. I did get one that looked like a softball, but was quickly denied that level of comfort when I saw the answers. They asked about services that "I" or "you" can setup in multi AZs, but then they give you the answers where only one is obvious and three others are multi-AZ by default. Don't know if I got it right, but that was just wrong to pull on my heart-strings like that - thinking I had one easy one.
+
+Advice
+
+In conclusion, this training course is one of the most relevant training courses to get familiarized with the concepts of the exam. The practice quizzes, mobile app and practice exams are all just tools to further your knowledge of the concepts not because they are on the exam as-is, but because you are going to have to know the "Why" about all of the covered topics. At the end of the day, I can honestly say that I had a slight bit of over-confidence because I have done most of what was in this course professionally for clients. However, when you've been doing this stuff for so long, you don't pay attention to the details anymore and just ignore little things like, "The name of the link that you setup your instances for auto-scaling." Yeah, I had that question. I just know where to do it and didn't ever pay attention to what that link is actually called. On that note, I recommend doing the exercises, labs, etc. to make sure you know those details.
+
+
+
+I'd suggest you to watch the re:Invent 2016 deep dive talks on some of the important services like VPC, EC2, S3 and RDS. Additionally, I'd suggest to focus on the following topics based on my experience of getting certified.
+
+1) EBS Snapshots and its impact on the performance while the snapshot is in progress
+
+2) S3 encryption
+
+3) VPC subnets and troubleshooting the connectivity issues
+
+4) Connecting VPC and corporate network
+
+5) Backing up in-house storage to the AWS cloud - Storage Gateway
+
+6) Route53 - CNAME, Alias and a record set
+
+7) RDS - Read replica vs standby
+
+8) ELB - Multi Zone load balancing and how it load balances across EC2 instances running in multiple AZs with different number of instances in each AZ
+
+9) ACL vs Security groups
+
+10) Which services provide root access to the underlying operating system - EC2, EMR, BeanStalk and OpsWorks
+
+11) CloudWatch vs CloudTrail
+
+12) Well Architected Framework - Security, Cost, Performance and, Reliability of the solution
+
+13) VPC Peering
+
+14) EC2 Placement Groups
+
+15) Bastian/Jump Host
+
+I have created a blog with posts on various AWS services along with some introduction to basic concepts that might be helpful for some of you looking for a quick refresher before the exam. These blogs also covers some of the topics that I highlighted above.
+
+My AWS Blog-
+
+https://asardana.com
+
+Direct links to some of my posts pertaining to AWS
+
+https://asardana.com/2017/04/30/aws-relational-database-service/
+
+https://asardana.com/2017/01/21/aws-identity-and-access-management/
+
+https://asardana.com/2017/01/22/aws-ec2-ebs-and-elb/
+
+https://asardana.com/2017/01/29/aws-simple-storage-service-s3-and-storage-gateway/
+
+https://asardana.com/2017/01/29/aws-cloud-front/
+
+https://asardana.com/2017/02/04/aws-dynamodb/
+
+https://asardana.com/2017/02/11/aws-simple-queue-service/
+
+https://asardana.com/2017/02/11/aws-simple-notification-service/
+
+https://asardana.com/2017/02/12/aws-simple-workflow-service/
+
+https://asardana.com/2017/02/15/aws-virtual-private-cloud/
+
+https://asardana.com/2017/02/18/aws-vpc-nat-instances-and-nat-gateway/
+
+https://asardana.com/2017/02/18/aws-vpc-network-security/
+
+https://asardana.com/2017/02/20/domain-name-system-an-overview/
+
+https://asardana.com/2017/02/24/aws-elastic-load-balancer/
+
+https://asardana.com/2017/02/25/aws-dns-service-route-53/
+
+https://asardana.com/2017/03/19/cloud-storage-types-object-block-and-file/
+
+https://asardana.com/2017/03/25/aws-s3-access-management/
+
+My Study Approach
+
+Ryan's course was my primary study material
+
+1. Make sure you watch course videos more than once
+
+You have to really pay attention while watching videos or listening since he's covering lot of concepts; taking down notes and trying to recap will help you to remember
+
+And while watching second time, you would be able to correlate better since you knew all topics unlike first time
+
+2. White Papers, following white papers I would recommend to go through at least once
+
+AWSCloudBest_Practices.pdf
+
+AWSSecurityWhitepaper.pdf
+
+aws-securing-data-at-rest-with-encryption.pdf
+
+aws-security-best-practices.pdf
+
+3. FAQ
+
+After completing each section; don't forgot to have a glance at FAQ section
+
+4. Practice Exams
+
+Practicing will be helpful in terms of identifying topics which we might have missed or not covered in course videos
+
+don't just try to identify the right answer, but try to analyze why other options are not viable as like discussed in the below blog
+
+https://markosrendell.wordpress.com/2013/12/12/aws-certified-solutions-architect-sample-questions-answered-and-discussed/
+
+make use of the free exam questions on these sites mentioned below
+
+https://thecertschool.com/
+
+http://quizbucket.org/quiz/aws
+
+http://hadoopexam.com/do1111/index.php/aws-amazon-webservice/aws-sol-architect-associate/71-question-8-for-dynamodb-which-statement-are-correct
+
+5. Answering scenario questions
+
+remember you will be spending much time in answering scenario questions;
+
+eliminate wrong answers to narrow down the scope of right answer
+
+if you remember what's allowed and what's possible with each and every service, you will be able to eliminate incorrect options like when it comes to VPC only one internet gateway can be attached any time and NAT and bastion host will be at public host always
+
+still if you are not able to decide on the scenario questions, just mark it for review and proceed with other questions, definitely you will be able to pass even if you miss couple of scenario questions.
+
+6. About the exam
+
+absolutely no questions on limits like how many Elastic IP allowed per account; but knowing the limits will be helpful
+
+eliminate wrong answers as I said earlier.
+
+exam is mix of scenario questions, straight forward questions, if you have practiced well, you will be able to answer many of them in less than a minute
+
+your chances of scoring high marks based on how much time you will be able to dedicate for scenario questions
+
+Whitepapers-
+
+https://d0.awsstatic.com/whitepapers/AWSCloudBest_Practices.pdf
+
+https://d0.awsstatic.com/whitepapers/Security/AWSSecurityBestPractices.pdf?refid=em
+
+http://d0.awsstatic.com/whitepapers/Security/AWS%20Security%20Whitepaper.pdf
+
+https://d0.awsstatic.com/whitepapers/architecture/AWSWell-ArchitectedFramework.pdf
+
+http://media.amazonwebservices.com/AWSDevelopmentTest_Environments.pdf
+
+https://d0.awsstatic.com/whitepapers/BackupArchiveandRestoreApproachesUsingAWS.pdf
+
+http://media.amazonwebservices.com/AWSAmazonVPCConnectivityOptions.pdf
+
+FAQs-
+
+https://aws.amazon.com/ec2/faqs/
+
+https://aws.amazon.com/s3/faqs/
+
+https://aws.amazon.com/vpc/faqs/
+
+https://aws.amazon.com/route53/faqs/
+
+https://aws.amazon.com/rds/faqs/
+
+https://aws.amazon.com/sqs/faqs/
+
+https://aws.amazon.com/elasticloadbalancing/faqs/
+
+https://aws.amazon.com/autoscaling/faqs/
+
+https://aws.amazon.com/efs/faq/
+
+https://aws.amazon.com/dynamodb/faqs/
+
+https://aws.amazon.com/sqs/faqs/
+
+https://aws.amazon.com/cloudtrail/faqs/
+
+Topics-
+
+vpc CIDR
+
+vpc routing amoung subnets
+
+vpc peering
+
+vpc flowlogs
+
+nat gateway and nat instance
+
+bastion host
+
+security groups and nacl
+
+spot instance pricing
+
+Cross-Zone Load Balancing
+
+application load balancer
+
+autoscaling termination policy
+
+autoscaling launch configuration
+
+route53 alias and CNAME record
+
+Storage gateway - stored volumes
+
+AWS import/export
+
+cloudtrail
+
+s3 storage catogeries
+
+s3 limits and capabilities
+
+STS, web federation and SSO
+
+cross-account access by assuming roles
+
+encrypting existing ebs volume
+
+decoupling application usig sqs
+
+which services can triger a lambda function
+
+benifits of using api gateway
+
+ways to protect s3 bucket and objects
+
+VPC(Security Groups, NACL, Bastion Host, NAT gateway, VPN, VPC Peering(1), VPC Flow logs(2), Subnets, Direct Connect)/ECS(5-6)/DynamoDb(3-4)/Lambda(2)/Api gateway(1)/STS(2)/cloudtrails and VPC flow logs(2)/Kenises (2)/Cross Account Access steps(1)/SQS(2)/ Auto scaling - how much will you pay when AWS has killed your connection (1)/S3- tricky question to chose between IA/Glacier/CloudWatch (2)/Chef a.k.a OpsWorks (1)/Security white paper (4)/ Well architecture white paper (2-3)
+
+1) Autoscaling - 3 questions. 1 Question was really tricky on ASG(two load balancer's). Make sure you practice labs and understand what you can do with Launch configuration, ASG & Scaling policies. Read Autoscaling default termination policy.
+
+2) VPC - around 8-10 questions. As everyone pointed out, you have to be hands-on all the VPC topics - Security Groups, NACL, Bastion Host, NAT gateway & instance., VPC Peering, VPC Flow logs, Subnets. Ryan's videos are enough.
+
+3) EC2 - Spot Instance use case, Spot Pricing. Tip: read AWS documentation
+
+4) S3 - Performance improvement, Bucket Policies & ACL, Understand S3 default data replication, S3 IA & Lifecyle policies. Ryan's course is more than enough.
+
+5) ELB - Equal split of questions on both Classic and Application Load balancer(Read FAQ)
+
+6) EBS - EBS Encryption(explore all the options on the console, like taking a snapshot, restoring volume, taking image out of snapshot. encrypting root and non root volumes). Tip: read AWS documentation for good understanding.
+
+7) Databases: 3-4 questions on Dynamo DB. RDS, Elasticache. For all DB's, my recommendation is to understand all the use cases. Tip: Read AWS Well Architected framework and Best Practices whitepaper
+
+8) IAM & STS: 5-6 questions. Understand all STS API's and their use cases(read AWS documentation for this). IAM roles, User Policies. Cross Account Access(Practice lab on Chapter 13)
+
+9) API Gateway: 2 questions - CORS & Features. Ryan's videos and FAQ's are enough.
+
+10) Lambda: Triggers & Scaling. Read AWS documentation for Lambda.
+
+11) AWS Config, Trusted Advisor - Straightforward and simple
+
+12) Cloudwatch( events, logs) & Cloudtrail - 3-4 questions. Understand the use cases well. Read AWS documentation, Jayendra's blogs.
+
+13) Kinesis. 1 question. Ryan's videos are enough.
+
+ECS Tasks and IAM roles - https://aws.amazon.com/blogs/compute/help-secure-container-enabled-applications-with-iam-roles-for-ecs-tasks/
+
+DynamoDB cross-region replication and Lambda triggers - https://aws.amazon.com/about-aws/whats-new/2015/07/amazon-dynamodb-available-now-cross-region-replication-triggers-and-streams/
+
+EBS encryption (how to switch to an encrypted volume - do you need to shut down the instance? Do you need to copy the snapshot to encrypt it and then reattach it?
+
+ECS - if I start an Ubuntu instance in a container but I can't see it in my ECS console, what might be wrong? (think ECS Container Agent)
+
+Active Directory - scenarios on how to integrate with on-premise AD installations using AD Connector
+
+Which services encrypt data at rest? (See http://jayendrapatil.com/aws-securing-data-at-rest/)
+
+STS - when is STS used to grant permissions to services? (Pretty sure I got this wrong!)
+
